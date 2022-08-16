@@ -72,6 +72,12 @@ insert into genresinger(id, singer_id, genre_id)
     
 insert into genresinger(id, singer_id, genre_id)
     values(10, 10, 3); 
+   
+insert into genresinger(id, singer_id, genre_id)
+    values(11, 4, 3); 
+   
+insert into genresinger(id, singer_id, genre_id)
+    values(12, 10, 1);   
     
 insert into album(id, name, year)
     values(1, 'Music To Be Murdered By', 2020);
@@ -320,7 +326,14 @@ insert into trackpack(id, pack_id, track_id)
     values(34, 8, 6);
    
 insert into trackpack(id, pack_id, track_id)
-    values(35, 8, 15);   
+    values(35, 8, 15);
+   
+alter table singer drop column genre_id;
+
+update singeralbum 
+  set singer_id = 7
+  where album_id = 8
+
    
     
    
