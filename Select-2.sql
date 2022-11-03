@@ -14,11 +14,13 @@ select a.name, avg(t.duration) duration from album a
   group by a.name
   order by duration desc;
 
-select s.name from singer s
+select distinct s.name from singer s
   join singeralbum sa on s.id = sa.singer_id
   join album a on sa.album_id = a.id 
-  where year != 2020
-  group by s.name 
+  where s.name != (select s.name from singer s
+  join singeralbum sa on s.id = sa.singer_id
+  join album a on sa.album_id = a.id 
+  where year = 2020)
   order by s.name;
  
 select p.name from pack p
@@ -28,7 +30,6 @@ select p.name from pack p
   join singeralbum sa on a.id = sa.album_id
   join singer s on sa.singer_id = s.id
   where s.name = 'Linkin Park'
-  group by p.name
   order by p.name; 
   
 select a.name from album a
@@ -40,8 +41,7 @@ select a.name from album a
 
 select t.name from track t
   left join trackpack tp on t.id = tp.track_id
-  where tp.track_id is null
-  group by t.name;
+  where tp.track_id is null;
  
 select s.name from singer s
   join singeralbum sa on s.id = sa.singer_id
@@ -49,11 +49,11 @@ select s.name from singer s
   left join track t on a.id = t.album_id
   where t.duration = (select min(duration) from track t)
   
-select a.name, count(a.id) as count_t from album a 
-  left join track t on a.id = t.album_id
-  group by a.name
-  order by count_t
-  limit 3
+select a.name, count_t from (select t.album_id, count(t.album_id) count_t from track t group by t.album_id) tt
+join album a on a.id = tt.album_id 
+group by a.name, tt.count_t
+having count_t = (select min(count1) from (select album_id, count(album_id) count1 from track group by album_id) as min1)
+  
   
   
   
